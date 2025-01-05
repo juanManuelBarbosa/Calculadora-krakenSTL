@@ -1,7 +1,7 @@
 import { FaArrowRight } from "react-icons/fa";
 import InputCalculator from './InputCalculator';
 
-const Calculator = ({ handleButtonClick, tipoImpresion, setTipoImpresion }) => {
+const Calculator = ({ handleButtonClick, tipoImpresion, setTipoImpresion, setCostosExtra, costosExtra }) => {
     return (
         <>
             <form
@@ -22,9 +22,19 @@ const Calculator = ({ handleButtonClick, tipoImpresion, setTipoImpresion }) => {
                     <InputCalculator label={"Gasto de Luz por Hora"} id={"NombreDeLaPieza"} />
                 </div>
 
+                {/* Costos Extra */}
+                <div className='w-full flex justify-between items-center'>
+                    <InputCalculator 
+                        label={"Costos Extra"} 
+                        id={"CostosExtra"} 
+                        value={costosExtra} 
+                        onChange={(e) => setCostosExtra(e.target.value)} // Actualizamos el estado de costosExtra
+                    />
+                </div>
+
                 {/* Selector de tipo de impresión (Unicolor o Multicolor) */}
-                <div className="flex justify-between w-full">
-                    <label htmlFor="tipoImpresion">Tipo de impresión:</label>
+                <div className="flex justify-between w-full text-2xl text-slate-800 p-1">
+                    <label htmlFor="tipoImpresion">¿Multicolor?</label>
                     <div className="flex gap-4">
                         <label>
                             <input 
@@ -34,7 +44,7 @@ const Calculator = ({ handleButtonClick, tipoImpresion, setTipoImpresion }) => {
                                 checked={tipoImpresion === "unicolor"} 
                                 onChange={() => setTipoImpresion("unicolor")} 
                             />
-                            Unicolor
+                            No
                         </label>
                         <label>
                             <input 
@@ -44,7 +54,7 @@ const Calculator = ({ handleButtonClick, tipoImpresion, setTipoImpresion }) => {
                                 checked={tipoImpresion === "multicolor"} 
                                 onChange={() => setTipoImpresion("multicolor")} 
                             />
-                            Multicolor
+                            Si
                         </label>
                     </div>
                 </div>

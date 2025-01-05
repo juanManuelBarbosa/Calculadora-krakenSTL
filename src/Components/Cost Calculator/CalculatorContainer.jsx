@@ -9,6 +9,7 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
     const [gramosUtilizados, setGramosUtilizados] = useState(0);
     const [horasDeImpresion, setHorasDeImpresion] = useState(0);
     const [luzXHora, setLuzXHora] = useState(0);
+    const [costosExtra, setCostosExtra] = useState(0); // Estado para Costos Extra
     const [gastoEnergetico, setGastoEnergetico] = useState(0);
     const [costoMaterial, setCostoMaterial] = useState(0);
     const [costoTotal, setCostoTotal] = useState(0);
@@ -28,14 +29,14 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
         setMultiplicadorCosto(multiplicador);
 
         // Calculamos el costo total usando el multiplicador
-        let costoTotalCalculado = actualizacionCostoMaterial * multiplicador;
+        let costoTotalCalculado = actualizacionCostoMaterial * multiplicador + (costosExtra * 2); // Se agrega el doble de costosExtra al costoTotal
         setCostoTotal(costoTotalCalculado);
 
-        // Calculamos la ganancia neta como la mitad del costo total
-        let gananciaCalculada = costoTotalCalculado / 2;
+        // Calculamos la ganancia neta sumando los costos extra
+        let gananciaCalculada = (costoTotalCalculado / 2) + costosExtra; // Se suma los costosExtra a la ganancia neta
         setGananciaNeta(gananciaCalculada);
 
-    }, [horasDeImpresion, luzXHora, gramosUtilizados, precioFilamento, tipoImpresion]);
+    }, [horasDeImpresion, luzXHora, gramosUtilizados, precioFilamento, tipoImpresion, costosExtra]);
 
     const handleButtonClick = (e) => {
         e.preventDefault();
@@ -59,7 +60,7 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
 
     function processData(ValoresInputs) {
         console.log("Valores de los inputs:", ValoresInputs);
-        if (ValoresInputs.length === 4) {
+        if (ValoresInputs.length === 5) { // Ahora esperamos 5 valores (incluyendo costos extra)
             asingValues(ValoresInputs);
         } else {
             console.log('Hubo un error: Algunos campos están vacíos o incorrectos');
@@ -71,8 +72,9 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
         const gramos = parseFloat(ValoresInputs[1]);
         const horas = parseFloat(ValoresInputs[2]);
         const luz = parseFloat(ValoresInputs[3]);
+        const extra = parseFloat(ValoresInputs[4]); // Agregamos el valor de costos extra
 
-        if (isNaN(precio) || isNaN(gramos) || isNaN(horas) || isNaN(luz)) {
+        if (isNaN(precio) || isNaN(gramos) || isNaN(horas) || isNaN(luz) || isNaN(extra)) {
             console.log("Error: alguno de los valores no es válido");
             return;
         }
@@ -81,6 +83,7 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
         setGramosUtilizados(gramos);
         setHorasDeImpresion(horas);
         setLuzXHora(luz);
+        setCostosExtra(extra); // Actualizamos el estado de costos extra
     }
 
     return (
@@ -93,6 +96,8 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
                         handleButtonClick={handleButtonClick} 
                         tipoImpresion={tipoImpresion} 
                         setTipoImpresion={setTipoImpresion}
+                        setCostosExtra={setCostosExtra} // Pasamos el setter de costosExtra a Calculator
+                        costosExtra={costosExtra} // Pasamos costosExtra a Calculator
                     />
                 </section>
 
