@@ -1,6 +1,6 @@
 import { FaArrowRight } from "react-icons/fa";
 import InputCalculator from './InputCalculator';
-
+//h
 const Calculator = ({ handleButtonClick, tipoImpresion, setTipoImpresion, setCostosExtra, costosExtra }) => {
     return (
         <>
@@ -46,7 +46,7 @@ const Calculator = ({ handleButtonClick, tipoImpresion, setTipoImpresion, setCos
                             />
                             No
                         </label>
-                        <label>
+                        <label> 
                             <input 
                                 type="radio" 
                                 name="tipoImpresion" 
