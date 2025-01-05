@@ -1,8 +1,7 @@
 import { FaArrowRight } from "react-icons/fa";
 import InputCalculator from './InputCalculator';
-import { Link } from 'react-router-dom';
 
-const Calculator = ({ handleButtonClick }) => {
+const Calculator = ({ handleButtonClick, tipoImpresion, setTipoImpresion }) => {
     return (
         <>
             <form
@@ -18,10 +17,36 @@ const Calculator = ({ handleButtonClick }) => {
                 {/* Horas de Impresión */}
                 <InputCalculator label={"Horas de Impresión"} id={"HorasDeImpresion"} />
 
-                {/* Gasto de Luz y Enlace */}
+                {/* Gasto de Luz */}
                 <div className='w-full flex justify-between items-center'>
                     <InputCalculator label={"Gasto de Luz por Hora"} id={"NombreDeLaPieza"} />
-                    
+                </div>
+
+                {/* Selector de tipo de impresión (Unicolor o Multicolor) */}
+                <div className="flex justify-between w-full">
+                    <label htmlFor="tipoImpresion">Tipo de impresión:</label>
+                    <div className="flex gap-4">
+                        <label>
+                            <input 
+                                type="radio" 
+                                name="tipoImpresion" 
+                                value="unicolor" 
+                                checked={tipoImpresion === "unicolor"} 
+                                onChange={() => setTipoImpresion("unicolor")} 
+                            />
+                            Unicolor
+                        </label>
+                        <label>
+                            <input 
+                                type="radio" 
+                                name="tipoImpresion" 
+                                value="multicolor" 
+                                checked={tipoImpresion === "multicolor"} 
+                                onChange={() => setTipoImpresion("multicolor")} 
+                            />
+                            Multicolor
+                        </label>
+                    </div>
                 </div>
 
                 {/* Botón Calcular */}
@@ -34,6 +59,6 @@ const Calculator = ({ handleButtonClick }) => {
             </form>
         </>
     );
-}
+};
 
 export default Calculator;

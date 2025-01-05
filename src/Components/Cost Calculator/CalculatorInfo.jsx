@@ -24,6 +24,7 @@ const CalculatorInfo = ({ costoMaterial, gastoEnergetico , costoTotal })=>{
                     <p>Precio total de la pieza</p>
                     <p>{`$${costoTotal}`}</p>
                 </div> 
+                
             </div>
            
           </>

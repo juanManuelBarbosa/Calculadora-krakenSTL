@@ -13,8 +13,9 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
     const [costoMaterial, setCostoMaterial] = useState(0);
     const [costoTotal, setCostoTotal] = useState(0);
     const [gananciaNeta, setGananciaNeta] = useState(0);
+    const [tipoImpresion, setTipoImpresion] = useState("no"); // Tipo de impresión: 'no' por defecto
+    const [multiplicadorCosto, setMultiplicadorCosto] = useState(4); // Multiplicador de costo (4 para unicolor, 6 para multicolor)
 
-    // Calculando los valores del gasto energético y costo del material sin los valores de 'pintado' y 'costoExtra'
     useEffect(() => {
         let actualizacionGastoEnergetico = horasDeImpresion * luzXHora;
         setGastoEnergetico(actualizacionGastoEnergetico);
@@ -22,43 +23,19 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
         let actualizacionCostoMaterial = (gramosUtilizados * precioFilamento) / 1000;
         setCostoMaterial(actualizacionCostoMaterial);
 
-        // Calculamos el costo total
-        let costoTotalCalculado = actualizacionGastoEnergetico + actualizacionCostoMaterial * 4;
+        // Ajustamos el multiplicador dependiendo de tipoImpresion
+        let multiplicador = tipoImpresion === "multicolor" ? 6 : 4;
+        setMultiplicadorCosto(multiplicador);
+
+        // Calculamos el costo total usando el multiplicador
+        let costoTotalCalculado = actualizacionCostoMaterial * multiplicador;
         setCostoTotal(costoTotalCalculado);
 
         // Calculamos la ganancia neta como la mitad del costo total
         let gananciaCalculada = costoTotalCalculado / 2;
         setGananciaNeta(gananciaCalculada);
-    }, [horasDeImpresion, luzXHora, gramosUtilizados, precioFilamento]);
 
-    function processData(ValoresInputs) {
-        console.log("Valores de los inputs:", ValoresInputs);
-        if (ValoresInputs.length === 4) {  // Ahora esperamos solo 4 valores
-            asingValues(ValoresInputs);
-        } else {
-            console.log('Hubo un error: Algunos campos están vacíos o incorrectos');
-        }
-    }
-
-    async function asingValues(ValoresInputs) {
-        // Asegurarse de que los valores sean números válidos
-        const precio = parseFloat(ValoresInputs[0]);
-        const gramos = parseFloat(ValoresInputs[1]);
-        const horas = parseFloat(ValoresInputs[2]);
-        const luz = parseFloat(ValoresInputs[3]);
-
-        // Verificamos si los valores son válidos antes de asignarlos
-        if (isNaN(precio) || isNaN(gramos) || isNaN(horas) || isNaN(luz)) {
-            console.log("Error: alguno de los valores no es válido");
-            return;
-        }
-
-        // Asignamos los valores solo si son números válidos
-        setPrecioFilamento(precio);
-        setGramosUtilizados(gramos);
-        setHorasDeImpresion(horas);
-        setLuzXHora(luz);
-    }
+    }, [horasDeImpresion, luzXHora, gramosUtilizados, precioFilamento, tipoImpresion]);
 
     const handleButtonClick = (e) => {
         e.preventDefault();
@@ -66,7 +43,6 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
         const ValoresInputs = [];
         let focusSet = false;
 
-        // Recoger los valores de los inputs
         inputs.forEach((input) => {
             if (input.value.trim() === '') {
                 if (!focusSet) {
@@ -78,18 +54,46 @@ const CalculatorContainer = ({ theme, changeTheme }) => {
             }
         });
 
-        // Procesar los datos recogidos
         processData(ValoresInputs);
     };
 
+    function processData(ValoresInputs) {
+        console.log("Valores de los inputs:", ValoresInputs);
+        if (ValoresInputs.length === 4) {
+            asingValues(ValoresInputs);
+        } else {
+            console.log('Hubo un error: Algunos campos están vacíos o incorrectos');
+        }
+    }
+
+    async function asingValues(ValoresInputs) {
+        const precio = parseFloat(ValoresInputs[0]);
+        const gramos = parseFloat(ValoresInputs[1]);
+        const horas = parseFloat(ValoresInputs[2]);
+        const luz = parseFloat(ValoresInputs[3]);
+
+        if (isNaN(precio) || isNaN(gramos) || isNaN(horas) || isNaN(luz)) {
+            console.log("Error: alguno de los valores no es válido");
+            return;
+        }
+
+        setPrecioFilamento(precio);
+        setGramosUtilizados(gramos);
+        setHorasDeImpresion(horas);
+        setLuzXHora(luz);
+    }
+
     return (
-        <div className="flex  flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen">
             <Navbar theme={theme} changeTheme={changeTheme} />
             
             <div className="flex gap-2 flex-col md:flex-row flex-1 justify-center">
-                {/* Aquí puedes ajustar los márgenes y el tamaño de los contenedores */}
                 <section className="basis-1/3 sm:basis-[40%] p-5 m-4 border border-fuchsia-950 border-3 rounded-lg bg-slate-950/40">
-                    <Calculator theme={theme} handleButtonClick={handleButtonClick} />
+                    <Calculator 
+                        handleButtonClick={handleButtonClick} 
+                        tipoImpresion={tipoImpresion} 
+                        setTipoImpresion={setTipoImpresion}
+                    />
                 </section>
 
                 <section className="basis-1/3 sm:basis-[40%] p-5 m-4 border border-fuchsia-950 border-3 rounded-lg bg-slate-950/40">
